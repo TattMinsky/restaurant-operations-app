@@ -1,1 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#173d32">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Restaurant Ops">
+<title>Restaurant Operations</title>
 
+<style>
+:root {
+--green: #173d32;
+--green2: #245b49;
+--gold: #e6b957;
+--bg: #f4f6f3;
+--card: #ffffff;
+--text: #202923;
+--muted: #69756d;
+--border: #e1e7e2;
+--danger: #b84141;
+}
+
+* { box-sizing: border-box; }
+
+body {
+margin: 0;
+background: var(--bg);
+color: var(--text);
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+padding-bottom: calc(90px + env(safe-area-inset-bottom));
+}
+
+header {
+background: var(--green);
+color: white;
+padding: 22px 18px 25px;
+padding-top: calc(22px + env(safe-area-inset-top));
+}
+
+.header-top {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.logo {
+font-size: 23px;
+font-weight: 800;
+}
+
+.header-sub {
+opacity: .8;
+margin-top: 5px;
+font-size: 13px;
+}
+
+main {
+max-width: 850px;
+margin: auto;
+padding: 16px;
+}
+
+h2 { margin: 5px 0 15px; font-size: 21px; }
+h3 { font-size: 16px; margin: 0 0 12px; }
+
+.card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 16px;
+margin-bottom: 14px;
+box-shadow: 0 2px 6px rgba(0,0,0,.03);
+}
+
+.card-title {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 10px;
+margin-bottom: 12px;
+}
+
+.stats {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 10px;
+}
+
+.stat {
+background: white;
+padding: 16px;
+border-radius: 14px;
+border: 1px solid var(--border);
+}
+
+.stat-number {
+font-size: 26px;
+font-weight: 800;
+color: var(--green);
+}
+
+.stat-label {
+font-size: 12px;
+color: var(--muted);
+margin-top: 4px;
+}
+
+button {
+border: 0;
+cursor: pointer;
+font: inherit;
+}
+
+.primary {
+background: var(--green);
+color: white;
+border-radius: 12px;
+padding: 13px 16px;
+font-weight: 700;
+}
+
+.secondary {
+background: #e9efeb;
+color: var(--green);
+border-radius: 10px;
+padding: 10px 13px;
+font-weight: 600;
+}
+
+.danger {
+color: var(--danger);
+background: #fff0f0;
+padding: 9px 12px;
+border-radius: 10px;
+}
+
+.task {
+display: flex;
+gap: 13px;
+align-items: flex-start;
+padding: 13px 0;
+border-bottom: 1px solid var(--border);
+}
+
+.task:last-child { border-bottom: 0; }
+
+.task input[type="checkbox"] {
+width: 25px;
+height: 25px;
+accent-color: var(--green);
+flex-shrink: 0;
+}
+
+.task label {
+line-height: 1.4;
+flex: 1;
+font-size: 15px;
+}
+
+.task.done label {
+text-decoration: line-through;
+color: #849088;
+}
+
+input, select, textarea {
+font: inherit;
+width: 100%;
+padding: 12px;
+border: 1px solid #d4ddd6;
+border-radius: 10px;
+background: white;
+color: var(--text);
+margin: 5px 0 12px;
+}
+
+textarea { min-height: 100px; resize: vertical; }
+
+label.field-label {
+display: block;
+font-size: 13px;
+font-weight: 700;
+margin-top: 8px;
+}
+
+.row {
+display: flex;
+gap: 10px;
+}
+
+.row > * { flex: 1; min-width: 0; }
+
+.badge {
+display: inline-block;
+background: #e8f0eb;
+color: var(--green);
+padding: 5px 9px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 700;
+}
+
+.nav {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 10;
+background: white;
+border-top: 1px solid var(--border);
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+}
+
+.nav button {
+background: transparent;
+color: var(--muted);
+font-size: 10px;
+font-weight: 600;
+padding: 7px 2px;
+}
+
+.nav button span {
+display: block;
+font-size: 21px;
+margin-bottom: 4px;
+}
+
+.nav button.active { color: var(--green); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.empty {
+color: var(--muted);
+text-align: center;
+padding: 20px;
+}
+
+.log-entry {
+border-left: 3px solid var(--gold);
+padding: 10px 12px;
+margin: 10px 0;
+background: #fafbf9;
+border-radius: 0 10px 10px 0;
+}
+
+.small {
+font-size: 12px;
+color: var(--muted);
+}
+
+@media (min-width: 700px) {
+main { padding: 25px; }
+.stats { grid-template-columns: repeat(4, 1fr); }
+.nav {
+position: sticky;
+top: 0;
+bottom: auto;
+max-width: 850px;
+margin: auto;
+border: 1px solid var(--border);
+border-radius: 14px;
+}
+body { padding-bottom: 30px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header-top">
+<div>
+<div class="logo">🍽 Restaurant Ops</div>
+<div class="header-sub">Gold Star • Manager Operations</div>
+</div>
+<div id="today" style="font-size:12px;text-align:right"></div>
+</div>
+</header>
+
+<nav class="nav">
+<button class="active" onclick="showPage('home',this)">
+<span>🏠</span>Home
+</button>
+<button onclick="showPage('checklists',this)">
+<span>☑️</span>Tasks
+</button>
+<button onclick="showPage('temps',this)">
+<span>🌡️</span>Temps
+</button>
+<button onclick="showPage('cleaning',this)">
+<span>🧹</span>Cleaning
+</button>
+<button onclick="showPage('logs',this)">
+<span>📝</span>Logbook
+</button>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+
+<section class="page active" id="home">
+<h2>Manager Dashboard</h2>
+
+<div class="stats">
+<div class="stat">
+<div class="stat-number" id="tasksDone">0</div>
+<div class="stat-label">Tasks completed</div>
+</div>
+<div class="stat">
+<div class="stat-number" id="tasksRemaining">0</div>
+<div class="stat-label">Tasks remaining</div>
+</div>
+<div class="stat">
+<div class="stat-number" id="tempCount">0</div>
+<div class="stat-label">Temp checks today</div>
+</div>
+<div class="stat">
+<div class="stat-number" id="cleanCount">0</div>
+<div class="stat-label">Cleaning completed</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:15px">
+<h3>Today's Progress</h3>
+<div id="progressText">0% complete</div>
+<div style="background:#e5ebe6;height:12px;border-radius:20px;margin-top:10px;overflow:hidden">
+<div id="progressBar" style="background:var(--green);width:0%;height:100%;transition:width .3s"></div>
+</div>
+</div>
+
+<div class="card">
+<h3>Quick Actions</h3>
+<div class="row">
+<button class="primary" onclick="showPage('checklists')">Open Tasks</button>
+<button class="primary" onclick="showPage('temps')">Record Temp</button>
+</div>
+<div class="row" style="margin-top:10px">
+<button class="secondary" onclick="showPage('cleaning')">Cleaning</button>
+<button class="secondary" onclick="showPage('logs')">Manager Log</button>
+</div>
+</div>
+
+<div class="card">
+<h3>Manager on Duty</h3>
+<label class="field-label">Manager name</label>
+<input id="managerName" placeholder="Enter manager name" onchange="saveName()">
+</div>
+</section>
+
+<!-- CHECKLISTS -->
+
+<section class="page" id="checklists">
+<h2>Shift Checklists</h2>
+
+<div class="card">
+<div class="card-title">
+<h3>Opening Checklist</h3>
+<span class="badge" id="openProgress">0/0</span>
+</div>
+<div id="openingTasks"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<h3>Midday Checklist</h3>
+<span class="badge" id="midProgress">0/0</span>
+</div>
+<div id="middayTasks"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<h3>Shift Change</h3>
+<span class="badge" id="shiftProgress">0/0</span>
+</div>
+<div id="shiftTasks"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<h3>Closing Checklist</h3>
+<span class="badge" id="closeProgress">0/0</span>
+</div>
+<div id="closingTasks"></div>
+</div>
+
+<button class="danger" onclick="resetTasks()">Reset Today's Checklists</button>
+</section>
+
+<!-- TEMPERATURE LOG -->
+
+<section class="page" id="temps">
+<h2>Food Safety Temperature Log</h2>
+
+<div class="card">
+<h3>Record Temperature</h3>
+
+<label class="field-label">Scheduled check</label>
+<select id="tempTime">
+<option>10:00 AM</option>
+<option>1:00 PM</option>
+<option>4:00 PM</option>
+<option>7:00 PM</option>
+<option>Other</option>
+</select>
+
+<label class="field-label">Food / Equipment</label>
+<input id="tempItem" placeholder="Example: Chicken, walk-in, hot holding">
+
+<div class="row">
+<div>
+<label class="field-label">Temperature °F</label>
+<input id="tempValue" type="number" step="0.1" placeholder="165">
+</div>
+<div>
+<label class="field-label">Initials</label>
+<input id="tempInitials" placeholder="AB">
+</div>
+</div>
+
+<label class="field-label">Corrective action / notes</label>
+<textarea id="tempNotes" placeholder="If out of range, record corrective action"></textarea>
+
+<button class="primary" onclick="saveTemp()" style="width:100%">Save Temperature</button>
+</div>
+
+<div class="card">
+<h3>Today's Temperature Records</h3>
+<div id="tempRecords"></div>
+</div>
+</section>
+
+<!-- CLEANING -->
+
+<section class="page" id="cleaning">
+<h2>Cleaning & Maintenance</h2>
+
+<div class="card">
+<h3>Daily Cleaning</h3>
+<div id="dailyCleaning"></div>
+</div>
+
+<div class="card">
+<h3>Weekly Deep Cleaning</h3>
+<div id="weeklyCleaning"></div>
+</div>
+
+<div class="card">
+<h3>Monthly Manager Checklist</h3>
+<div id="monthlyCleaning"></div>
+</div>
+
+<button class="danger" onclick="resetCleaning()">Reset Cleaning Checklists</button>
+</section>
+
+<!-- MANAGER LOG -->
+
+<section class="page" id="logs">
+<h2>Manager Logbook</h2>
+
+<div class="card">
+<h3>New Shift Note</h3>
+
+<label class="field-label">Category</label>
+<select id="logCategory">
+<option>Shift Communication</option>
+<option>Maintenance</option>
+<option>Staffing</option>
+<option>Food Safety</option>
+<option>Guest Concern</option>
+<option>Inventory</option>
+<option>Other</option>
+</select>
+
+<label class="field-label">Note</label>
+<textarea id="logNote" placeholder="Enter important information for the next manager"></textarea>
+
+<button class="primary" onclick="saveLog()" style="width:100%">Save Log Entry</button>
+</div>
+
+<div class="card">
+<h3>Previous Entries</h3>
+<div id="logEntries"></div>
+</div>
+</section>
+
+</main>
+
+<script>
+const todayKey = new Date().toLocaleDateString('en-CA');
+
+document.getElementById("today").textContent =
+new Date().toLocaleDateString(undefined,{
+weekday:"short",month:"short",day:"numeric"
+});
+
+const opening = [
+"Check restaurant exterior and entrance",
+"Verify equipment is operating properly",
+"Check refrigeration and freezer temperatures",
+"Complete opening food safety checks",
+"Stock all stations and supplies",
+"Prepare dining room and guest areas",
+"Check restrooms",
+"Review staffing and station assignments",
+"Verify sanitizer and cleaning supplies",
+"Review manager communication log"
+];
+
+const midday = [
+"Restock all containers and food products at every station",
+"Check all food temperatures",
+"Clean and organize workstations",
+"Restock paper goods and supplies",
+"Check dining room and restrooms",
+"Clean and organize prep areas",
+"Verify dish area is clean and stocked",
+"Review staffing and deployment",
+"Check exterior and drive-thru",
+"Complete required food safety checks"
+];
+
+const shiftChange = [
+"Communicate staffing changes",
+"Review food safety and temperature records",
+"Communicate inventory shortages",
+"Review maintenance issues",
+"Check cleanliness of all stations",
+"Confirm station stocking",
+"Communicate outstanding tasks",
+"Review manager logbook"
+];
+
+const closing = [
+"Clean entire dish area",
+"Clean entire prep area",
+"Clean prep cart",
+"Clean grill hoods",
+"Clean sides of fryer and grill",
+"Clean and sanitize all work surfaces",
+"Clean and restock all stations",
+"Complete food safety temperature checks",
+"Store and label food properly",
+"Clean dining room and guest areas",
+"Clean restrooms",
+"Clean floors throughout restaurant",
+"Empty trash and replace liners",
+"Clean drive-thru area",
+"Complete closing equipment checks",
+"Secure restaurant"
+];
+
+const daily = [
+"Dining room: tables, chairs, floors and baseboards",
+"Dust pictures and wall fixtures",
+"Clean server station",
+"Clean restrooms and replenish supplies",
+"Clean drive-thru and exterior upkeep",
+"Clean expo area",
+"Clean steam table and hot line",
+"Clean entire dish area",
+"Clean entire prep area",
+"Clean prep cart",
+"Clean grill hoods",
+"Clean sides of fryer and grill",
+"Clean and sanitize kitchen surfaces",
+"Restock all stations"
+];
+
+const weekly = [
+"Deep clean dining room and interior areas",
+"Deep clean restrooms",
+"Deep clean server station",
+"Deep clean drive-thru",
+"Deep clean expo area",
+"Deep clean steam table and hot line",
+"Deep clean kitchen equipment",
+"Deep clean prep areas",
+"Deep clean dish area",
+"Clean hard-to-reach areas",
+"Detail floors and corners",
+"Clean equipment and exterior surfaces"
+];
+
+const monthly = [
+"Inspect facilities and maintenance needs",
+"Review food safety procedures",
+"Review compliance requirements",
+"Review operational performance",
+"Review guest-facing areas",
+"Inspect signage and marketing materials",
+"Review equipment condition",
+"Review cleaning standards",
+"Check safety equipment",
+"Document outstanding issues"
+];
+
+function loadData(){
+try {
+return JSON.parse(localStorage.getItem("restaurantOps") || "{}");
+} catch(e) {
+return {};
+}
+}
+
+let data = loadData();
+
+function saveData(){
+localStorage.setItem("restaurantOps",JSON.stringify(data));
+render();
+}
+
+function dayData(){
+if(!data[todayKey]) data[todayKey]={};
+return data[todayKey];
+}
+
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+if(btn) btn.classList.add("active");
+else {
+const buttons=[...document.querySelectorAll(".nav button")];
+const idx=["home","checklists","temps","cleaning","logs"].indexOf(id);
+if(buttons[idx])buttons[idx].classList.add("active");
+}
+}
+
+function renderTasks(id,items,key){
+const target=document.getElementById(id);
+const d=dayData();
+if(!d[key])d[key]={};
+
+target.innerHTML=items.map((item,i)=>{
+const checked=!!d[key][i];
+return `
+<div class="task ${checked?'done':''}">
+<input type="checkbox" ${checked?'checked':''}
+onchange="toggleTask('${key}',${i},this.checked)">
+<label>${item}</label>
+</div>`;
+}).join("");
+}
+
+function toggleTask(key,index,checked){
+const d=dayData();
+if(!d[key])d[key]={};
+d[key][index]=checked;
+saveData();
+}
+
+function progress(items,key){
+const d=dayData();
+const group=d[key]||{};
+const done=items.filter((_,i)=>group[i]).length;
+return {done,total:items.length};
+}
+
+function renderCleaning(id,items,key){
+renderTasks(id,items,key);
+}
+
+function render(){
+data=loadData();
+const d=dayData();
+
+renderTasks("openingTasks",opening,"opening");
+renderTasks("middayTasks",midday,"midday");
+renderTasks("shiftTasks",shiftChange,"shift");
+renderTasks("closingTasks",closing,"closing");
+
+renderCleaning("dailyCleaning",daily,"daily");
+renderCleaning("weeklyCleaning",weekly,"weekly");
+renderCleaning("monthlyCleaning",monthly,"monthly");
+
+document.getElementById("openProgress").textContent=
+`${progress(opening,"opening").done}/${opening.length}`;
+document.getElementById("midProgress").textContent=
+`${progress(midday,"midday").done}/${midday.length}`;
+document.getElementById("shiftProgress").textContent=
+`${progress(shiftChange,"shift").done}/${shiftChange.length}`;
+document.getElementById("closeProgress").textContent=
+`${progress(closing,"closing").done}/${closing.length}`;
+
+const taskGroups=[opening,midday,shiftChange,closing];
+const total=taskGroups.reduce((n,a)=>n+a.length,0);
+const done=taskGroups.reduce((n,a)=>{
+return n+progress(a,["opening","midday","shift","closing"][taskGroups.indexOf(a)]).done;
+},0);
+
+document.getElementById("tasksDone").textContent=done;
+document.getElementById("tasksRemaining").textContent=total-done;
+document.getElementById("progressText").textContent=
+Math.round(done/total*100)+"% complete";
+document.getElementById("progressBar").style.width=
+Math.round(done/total*100)+"%";
+
+const cleanGroups=[daily,weekly,monthly];
+const cleanKeys=["daily","weekly","monthly"];
+const cleanDone=cleanGroups.reduce((n,a,i)=>n+progress(a,cleanKeys[i]).done,0);
+document.getElementById("cleanCount").textContent=cleanDone;
+
+document.getElementById("managerName").value=data.managerName||"";
+
+renderTemps();
+renderLogs();
+}
+
+function saveName(){
+data=loadData();
+data.managerName=document.getElementById("managerName").value;
+saveData();
+}
+
+function saveTemp(){
+const item=document.getElementById("tempItem").value.trim();
+const value=document.getElementById("tempValue").value;
+const initials=document.getElementById("tempInitials").value.trim();
+
+if(!item||value===""||!initials){
+alert("Please enter food/equipment, temperature, and initials.");
+return;
+}
+
+data=loadData();
+const d=dayData();
+if(!d.temps)d.temps=[];
+
+d.temps.push({
+time:document.getElementById("tempTime").value,
+item:item,
+value:value,
+initials:initials,
+notes:document.getElementById("tempNotes").value,
+recorded:new Date().toLocaleTimeString()
+});
+
+document.getElementById("tempItem").value="";
+document.getElementById("tempValue").value="";
+document.getElementById("tempInitials").value="";
+document.getElementById("tempNotes").value="";
+
+saveData();
+}
+
+function renderTemps(){
+const records=dayData().temps||[];
+document.getElementById("tempCount").textContent=records.length;
+
+document.getElementById("tempRecords").innerHTML=
+records.length?records.slice().reverse().map(r=>`
+<div class="log-entry">
+<strong>${escapeHTML(r.item)}</strong>
+<span class="badge">${escapeHTML(r.time)}</span>
+<div style="font-size:20px;font-weight:800;margin:6px 0">
+${escapeHTML(r.value)}°F
+</div>
+<div class="small">Initials: ${escapeHTML(r.initials)} • ${escapeHTML(r.recorded)}</div>
+${r.notes?`<p>${escapeHTML(r.notes)}</p>`:""}
+</div>
+`).join(""):`<div class="empty">No temperatures recorded today.</div>`;
+}
+
+function saveLog(){
+const note=document.getElementById("logNote").value.trim();
+if(!note){
+alert("Please enter a note.");
+return;
+}
+
+data=loadData();
+const d=dayData();
+if(!d.logs)d.logs=[];
+
+d.logs.push({
+category:document.getElementById("logCategory").value,
+note:note,
+manager:data.managerName||"Not specified",
+time:new Date().toLocaleString()
+});
+
+document.getElementById("logNote").value="";
+saveData();
+}
+
+function renderLogs(){
+const records=dayData().logs||[];
+document.getElementById("logEntries").innerHTML=
+records.length?records.slice().reverse().map(r=>`
+<div class="log-entry">
+<strong>${escapeHTML(r.category)}</strong>
+<div class="small">${escapeHTML(r.manager)} • ${escapeHTML(r.time)}</div>
+<p>${escapeHTML(r.note)}</p>
+</div>
+`).join(""):`<div class="empty">No manager notes today.</div>`;
+}
+
+function resetTasks(){
+if(!confirm("Reset today's shift checklists?"))return;
+const d=dayData();
+delete d.opening;
+delete d.midday;
+delete d.shift;
+delete d.closing;
+saveData();
+}
+
+function resetCleaning(){
+if(!confirm("Reset today's cleaning checklists?"))return;
+const d=dayData();
+delete d.daily;
+delete d.weekly;
+delete d.monthly;
+saveData();
+}
+
+function escapeHTML(s){
+return String(s).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",
+'"':"&quot;","'":"&#39;"
+}[c]));
+}
+
+render();
+</script>
+
+</body>
+</html>
