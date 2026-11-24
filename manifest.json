@@ -7,7 +7,39 @@
   "display": "standalone",
   "orientation": "any",
   "background_color": "#f4f6f3",
-  "theme_color": "#172b24",
+  "theme_color": "#172b24",{
+  "name": "Restaurant Operations",
+  "short_name": "Restaurant Ops",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F3F3F3",
+  "theme_color": "#C41230",
+  "description": "Restaurant manager checklists, temperature logs, deployment, and communication.",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
+
   "description": "Restaurant manager checklists, temperature logs, deployment, and communication.",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
