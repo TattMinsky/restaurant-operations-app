@@ -9,6 +9,8 @@ Included:
 - Cloud audit events for temperature submissions, checklist toggles, and logbook entries.
 
 DEPLOYMENT / SETUP
+0. After the first SQL file, also run SUPABASE_HARDENING.sql (append-only audit log, server-set timestamps, tighter GM policy).
+   In Supabase > Authentication > Sign In / Providers, turn OFF 'Allow new users to sign up'.
 1. In Supabase Dashboard > SQL Editor, run SUPABASE_MULTI_LOCATION_SETUP.sql.
 2. The existing Auth user ID efdf695f-ade6-4697-bd17-5265de1c4d7c is bootstrapped as Corporate. Confirm that this is the intended Corporate administrator before running the SQL.
 3. Deploy the contents of this folder to the existing GitHub repository root. Netlify should deploy from the same publish directory already configured.
