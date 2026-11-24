@@ -1,16 +1,19 @@
-Restaurant Operations PWA
+Restaurant Operations App — Gold Star themed update
 
-This project is a mobile-first installable web app for restaurant operations.
+Included in this update:
+- Gold Star-inspired burgundy/red and gold palette
+- Larger, labeled navigation with a new Temp Status section
+- Automatic timestamp on temperature submissions
+- Scheduled checks at 10 AM, 1 PM, 4 PM, and 7 PM
+- 60-minute grace window; timely submissions pass and late submissions fail
+- Daily compliance screen for pass, fail, missed, pending, and upcoming checks
+- Date selector to review a day’s compliance status
 
-Supabase connection has been configured using the project's URL and publishable key.
-The Supabase JS client is loaded from jsDelivr and initialized in index.html.
+Important limitations of this starter:
+- This version continues to store data in browser localStorage on the device.
+- Supabase connection settings are present, but authentication and database writes are not implemented in this HTML app yet.
+- Manager identity is not automatically captured yet.
+- A compliance check with no record is displayed as missed once the deadline has passed; this is calculated when the page is opened.
+- These features are a workflow prototype and should not replace required official food-safety records until validated against your restaurant’s approved standards and procedures.
 
-IMPORTANT:
-- This build initializes the Supabase client but does not yet sync app records or implement manager login.
-- Keep secret/service-role keys out of this app.
-- Cloud syncing and manager authentication are the next development steps.
-- Records in this current prototype still save locally to each device.
-- Confirm food safety limits and corrective actions with official restaurant policy.
-
-To test locally, serve this folder over HTTPS or localhost. For installation on phones,
-host it on an HTTPS web host and open it in the mobile browser to add to Home Screen.
+Open index.html in a browser or deploy the folder as a static site.
