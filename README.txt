@@ -1,19 +1,23 @@
-Restaurant Operations App — Gold Star themed update
+GOLD STAR RESTAURANT OPERATIONS — MULTI-LOCATION AUTH UPDATE
 
-Included in this update:
-- Gold Star-inspired burgundy/red and gold palette
-- Larger, labeled navigation with a new Temp Status section
-- Automatic timestamp on temperature submissions
-- Scheduled checks at 10 AM, 1 PM, 4 PM, and 7 PM
-- 60-minute grace window; timely submissions pass and late submissions fail
-- Daily compliance screen for pass, fail, missed, pending, and upcoming checks
-- Date selector to review a day’s compliance status
+Included:
+- Email/password sign-in through Supabase Auth.
+- Corporate, GM, and Shift Lead role model.
+- Three seeded restaurant locations.
+- Corporate location selector; GM/Shift Lead are restricted to assigned location.
+- Row Level Security for access assignments and activity records.
+- Cloud audit events for temperature submissions, checklist toggles, and logbook entries.
 
-Important limitations of this starter:
-- This version continues to store data in browser localStorage on the device.
-- Supabase connection settings are present, but authentication and database writes are not implemented in this HTML app yet.
-- Manager identity is not automatically captured yet.
-- A compliance check with no record is displayed as missed once the deadline has passed; this is calculated when the page is opened.
-- These features are a workflow prototype and should not replace required official food-safety records until validated against your restaurant’s approved standards and procedures.
+DEPLOYMENT / SETUP
+1. In Supabase Dashboard > SQL Editor, run SUPABASE_MULTI_LOCATION_SETUP.sql.
+2. The existing Auth user ID efdf695f-ade6-4697-bd17-5265de1c4d7c is bootstrapped as Corporate. Confirm that this is the intended Corporate administrator before running the SQL.
+3. Deploy the contents of this folder to the existing GitHub repository root. Netlify should deploy from the same publish directory already configured.
+4. Sign in with the existing Supabase Auth email/password for that user.
+5. To invite a GM or Shift Lead, go to Supabase Authentication > Users and invite/create the user's email. Copy that user's UUID and run an INSERT into app_user_access, choosing role and location. Example SQL is at the bottom of SUPABASE_MULTI_LOCATION_SETUP.sql.
 
-Open index.html in a browser or deploy the folder as a static site.
+IMPORTANT CURRENT SCOPE
+- Login and database-enforced location access are implemented.
+- Temperature, checklist toggle, and logbook actions send audit events to app_activity_records.
+- The existing legacy checklist/cleaning/temperature UI still keeps its working state in browser localStorage. This update does not yet migrate every old local record or make all views a fully cloud-synchronized shared source of truth. Cleaning and deployment actions are not yet cloud-audited.
+- Account invitation and role assignment are performed by an administrator in Supabase; end-user self-registration is intentionally disabled so users cannot grant themselves roles or locations.
+- Validate all restaurant food-safety thresholds and operational procedures before relying on the app as an official compliance record.
